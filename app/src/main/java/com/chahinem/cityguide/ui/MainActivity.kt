@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
   private val mainAdapter = MainAdapter()
 
   override fun onCreate(savedInstanceState: Bundle?) {
+    injectSelf()
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
@@ -52,20 +53,18 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
     list.layoutManager = LinearLayoutManager(this)
     list.adapter = mainAdapter
 
+    refreshLayout.setOnRefreshListener {
+      viewModel.uiEvents.onNext(LoadMain(true))
+    }
+    viewModel.data.observe(this, Observer {
+      if (it != null) {
+        onModelEvent(it)
+      }
+    })
+
     ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION).let {
       if (it != PERMISSION_GRANTED) {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION), RC_LOCATION)
-      } else {
-        injectSelf()
-        refreshLayout.setOnRefreshListener {
-          viewModel.uiEvents.onNext(LoadMain(true))
-        }
-        viewModel.data.observe(this, Observer {
-          if (it != null) {
-            onModelEvent(it)
-          }
-        })
-        viewModel.uiEvents.onNext(LoadMain())
       }
     }
   }
@@ -76,7 +75,7 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
     when (requestCode) {
       RC_LOCATION -> {
         if ((grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED)) {
-          recreate()
+          viewModel.uiEvents.onNext(LoadMain())
         } else {
           Snackbar
               .make(list, getString(R.string.error_location_permission), Toast.LENGTH_LONG)
