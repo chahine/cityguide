@@ -12,11 +12,11 @@ class LastLocationRepo @Inject constructor(private val activity: Activity) {
 
   private var location: Location? = null
 
-  fun lastLocation(): Observable<Location> {
-    return if (location != null) {
+  fun lastLocation(skipCache: Boolean = false): Observable<Location> {
+    return if (location != null && !skipCache) {
       Observable.just(location)
     } else {
-      LastLocationObservable(activity).flatMap { saveLocation(it) }
+      LastLocationObservable(activity).concatMap { saveLocation(it) }
     }
   }
 

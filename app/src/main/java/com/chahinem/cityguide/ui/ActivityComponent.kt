@@ -4,13 +4,14 @@ import android.app.Activity
 import android.app.Application
 import com.chahinem.cityguide.api.ApiModule
 import com.chahinem.cityguide.api.DistanceMatrixApi
+import com.chahinem.cityguide.di.ViewModelModule
 import com.chahinem.cityguide.repositories.LastLocationRepo
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [ApiModule::class])
+@Component(modules = [ApiModule::class, ViewModelModule::class])
 interface ActivityComponent {
 
   fun inject(activity: MainActivity)

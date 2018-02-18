@@ -54,6 +54,9 @@ dependencies {
   implementation Deps.recyclerviewV7
   implementation Deps.constraintLayout
 
+  Deps.arch.each { implementation it }
+  Deps.archAP.each { kapt it }
+
   Deps.rx.each { implementation it }
   Deps.api.each { implementation it }
 
