@@ -16,12 +16,7 @@ class LastLocationRepo @Inject constructor(private val activity: Activity) {
     return if (location != null && !skipCache) {
       Observable.just(location)
     } else {
-      LastLocationObservable(activity).concatMap { saveLocation(it) }
+      LastLocationObservable(activity).doOnNext { location = it }
     }
-  }
-
-  private fun saveLocation(location: Location): Observable<Location> {
-    this.location = location
-    return Observable.just(this.location)
   }
 }

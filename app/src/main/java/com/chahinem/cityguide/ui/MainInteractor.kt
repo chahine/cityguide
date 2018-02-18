@@ -6,12 +6,12 @@ import com.chahinem.cityguide.BuildConfig
 import com.chahinem.cityguide.api.DistanceMatrixApi
 import com.chahinem.cityguide.api.DistanceMatrixResponse
 import com.chahinem.cityguide.repositories.LastLocationRepo
+import com.chahinem.cityguide.repositories.PlaceRepo
 import com.chahinem.cityguide.ui.MainEvent.LoadMain
 import com.chahinem.cityguide.ui.MainModel.MainFailure
 import com.chahinem.cityguide.ui.MainModel.MainProgress
 import com.chahinem.cityguide.ui.MainModel.MainSuccess
 import com.chahinem.cityguide.utils.AutocompletePredictionsObservable
-import com.chahinem.cityguide.utils.PlaceByIdObservable
 import com.google.android.gms.location.places.Place
 import io.reactivex.Observable
 import io.reactivex.ObservableTransformer
@@ -21,6 +21,7 @@ import javax.inject.Inject
 
 class MainInteractor @Inject constructor(
     private val activity: Activity,
+    private val placeRepo: PlaceRepo,
     private val distanceMatrixApi: DistanceMatrixApi,
     private val lastLocationRepo: LastLocationRepo) {
 
@@ -59,7 +60,7 @@ class MainInteractor @Inject constructor(
     return ObservableTransformer {
       it.switchMap { location ->
         AutocompletePredictionsObservable(activity, query, location)
-            .flatMap { PlaceByIdObservable(activity, it.placeId) }
+            .flatMap { placeRepo.placeById(it.placeId.orEmpty()) }
             .map { query to it }
       }
     }
@@ -83,6 +84,5 @@ class MainInteractor @Inject constructor(
               .subscribeOn(Schedulers.io())
               .observeOn(AndroidSchedulers.mainThread())
         }
-        .onErrorResumeNext(Observable.empty())
   }
 }
