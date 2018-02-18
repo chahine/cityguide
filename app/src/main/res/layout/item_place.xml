@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:orientation="horizontal"
+    >
+  <ImageView
+      android:id="@+id/image"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:src="@drawable/ic_local_bar"
+      />
+  <TextView
+      android:id="@+id/distance"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="0.4 mi"
+      style="@style/Base.TextAppearance.AppCompat.Caption"
+      />
+  <TextView
+      android:id="@+id/name"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="16dp"
+      android:ellipsize="end"
+      android:lines="1"
+      app:layout_constraintEnd_toStartOf="@id/distance"
+      app:layout_constraintStart_toEndOf="@id/image"
+      tools:text="Chez Maman"
+      style="@style/TextAppearance.AppCompat.Title"
+      />
+  <RatingBar
+      android:id="@+id/ratingBar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="@id/name"
+      app:layout_constraintTop_toBottomOf="@id/name"
+      tools:rating="2"
+      style="@style/Widget.AppCompat.RatingBar.Small"
+      />
+</android.support.constraint.ConstraintLayout>
