@@ -26,6 +26,7 @@ import kotlinx.android.synthetic.main.activity_main.bistro
 import kotlinx.android.synthetic.main.activity_main.cafe
 import kotlinx.android.synthetic.main.activity_main.list
 import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.android.synthetic.main.activity_main.refreshLayout
 import kotlinx.android.synthetic.main.activity_main.slider
 import timber.log.Timber
 import javax.inject.Inject
@@ -56,6 +57,9 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION), RC_LOCATION)
       } else {
         injectSelf()
+        refreshLayout.setOnRefreshListener {
+          viewModel.uiEvents.onNext(LoadMain(true))
+        }
         viewModel.data.observe(this, Observer {
           if (it != null) {
             onModelEvent(it)
@@ -129,11 +133,13 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
 
   private fun onMainSuccess(model: MainSuccess) {
     progressBar.visibility = View.GONE
+    refreshLayout.isRefreshing = false
     mainAdapter.swapData(model.items)
   }
 
   private fun onMainFailure(model: MainFailure) {
     progressBar.visibility = View.GONE
+    refreshLayout.isRefreshing = false
     Snackbar
         .make(list, model.error.message.toString(), Toast.LENGTH_LONG)
         .show()

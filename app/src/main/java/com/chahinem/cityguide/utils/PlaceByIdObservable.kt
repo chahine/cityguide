@@ -1,6 +1,5 @@
 package com.chahinem.cityguide.utils
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import com.google.android.gms.location.places.Place
 import com.google.android.gms.location.places.Places
@@ -17,7 +16,6 @@ class PlaceByIdObservable(activity: Activity, private val placeId: String?) : Ob
     observer?.onSubscribe(Listener(observer))
   }
 
-  @SuppressLint("MissingPermission")
   inner class Listener(private val observer: Observer<in Place>?) : MainThreadDisposable() {
     init {
       geoDataClient.getPlaceById(placeId).addOnCompleteListener {

@@ -30,32 +30,34 @@ class MainInteractor @Inject constructor(
 
   fun places(): ObservableTransformer<in LoadMain, out MainModel> {
     return ObservableTransformer {
-      lastLocationRepo
-          .lastLocation()
-          .publish { shared ->
-            Observable.mergeDelayError(
-                shared.compose(placeComposer(BAR)),
-                shared.compose(placeComposer(BISTRO)),
-                shared.compose(placeComposer(CAFE))
-            )
-          }
-          .toList()
-          .flatMapObservable { places ->
-            fetchDistanceMatrix(places.map { it.second.id }.toList())
-                .map {
-                  val mainItems = mutableListOf<MainAdapter.Item>()
-                  places.forEachIndexed { index, pair ->
-                    mainItems.add(MainAdapter.Item(
-                        pair.first,
-                        pair.second,
-                        it.rows?.get(0)?.elements?.get(index)?.distance?.text))
+      it.switchMap {
+        lastLocationRepo
+            .lastLocation(it.skipCache)
+            .publish { shared ->
+              Observable.mergeDelayError(
+                  shared.compose(placeComposer(BAR)),
+                  shared.compose(placeComposer(BISTRO)),
+                  shared.compose(placeComposer(CAFE))
+              )
+            }
+            .toList()
+            .flatMapObservable { places ->
+              fetchDistanceMatrix(places.map { it.second.id }.toList())
+                  .map {
+                    val mainItems = mutableListOf<MainAdapter.Item>()
+                    places.forEachIndexed { index, pair ->
+                      mainItems.add(MainAdapter.Item(
+                          pair.first,
+                          pair.second,
+                          it.rows?.get(0)?.elements?.get(index)?.distance?.text))
+                    }
+                    mainItems
                   }
-                  mainItems
-                }
-          }
-          .map { MainSuccess(it) as MainModel }
-          .onErrorReturn { MainFailure(it) }
-          .startWith(MainProgress())
+            }
+            .map { MainSuccess(it) as MainModel }
+            .onErrorReturn { MainFailure(it) }
+            .startWith(MainProgress())
+      }
     }
   }
 
