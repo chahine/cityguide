@@ -1,4 +1,4 @@
-package com.chahinem.cityguide
+package com.chahinem.cityguide.utils
 
 import android.app.Activity
 import android.location.Location

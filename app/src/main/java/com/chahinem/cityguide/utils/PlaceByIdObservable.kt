@@ -1,4 +1,4 @@
-package com.chahinem.cityguide
+package com.chahinem.cityguide.utils
 
 import android.annotation.SuppressLint
 import android.app.Activity
