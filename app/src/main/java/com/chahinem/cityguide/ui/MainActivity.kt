@@ -101,21 +101,23 @@ class MainActivity : AppCompatActivity() {
         }
         .toList()
         .subscribe(
-            { mainAdapter.swapData(it.filter { it.first == "bar" }.flatMap { it.second }) },
+            {
+              mainAdapter.swapData(it
+                  .filter { it.first == "bar" }
+                  .map { MainItem(it.second, null) }
+                  .toList())
+            },
             { Timber.e(it) }
         )
   }
 
-  private fun placeComposer(query: String): ObservableTransformer<in Location, out Pair<String, List<MainItem>>> {
-    return ObservableTransformer { upstream ->
-      upstream
-          .switchMapSingle { location ->
-            AutocompletePredictionsObservable(this, query, location)
-                .concatMap { fetchDistanceMatrix(location, it) }
-                .map { (a, b) -> MainItem(a, b) }
-                .toList()
-                .map { query to it }
-          }
+  private fun placeComposer(query: String): ObservableTransformer<in Location, out Pair<String, Place>> {
+    return ObservableTransformer {
+      it.switchMap { location ->
+        AutocompletePredictionsObservable(this, query, location)
+            .flatMap { PlaceByIdObservable(this, it.placeId) }
+            .map { query to it }
+      }
     }
   }
 

@@ -54,11 +54,11 @@ class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
         name.text = it.name
         ratingBar.rating = it.rating
       }
-      distance.text = item.matrixResponse.rows?.firstOrNull()
+      distance.text = item.matrixResponse?.rows?.firstOrNull()
           ?.elements?.firstOrNull()
           ?.distance?.text
     }
   }
 
-  class MainItem(val place: Place, val matrixResponse: DistanceMatrixResponse)
+  class MainItem(val place: Place, val matrixResponse: DistanceMatrixResponse?)
 }
