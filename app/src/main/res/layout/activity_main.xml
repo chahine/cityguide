@@ -12,7 +12,7 @@
   <com.chahinem.cityguide.ui.custom.CustomSlider
       android:id="@+id/slider"
       android:layout_width="match_parent"
-      android:layout_height="64dp"
+      android:layout_height="@dimen/slider_height"
       android:background="@color/colorPrimary"
       android:padding="@dimen/spacing_medium"
       >
