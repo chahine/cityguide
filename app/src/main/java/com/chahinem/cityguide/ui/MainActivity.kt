@@ -20,6 +20,7 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.Places
+import kotlinx.android.synthetic.main.activity_main.bar
 import kotlinx.android.synthetic.main.activity_main.list
 import kotlinx.android.synthetic.main.activity_main.progressBar
 import timber.log.Timber
@@ -38,27 +39,23 @@ class MainActivity : AppCompatActivity() {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
 
-    injectSelf()
-
     fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
     geoDataClient = Places.getGeoDataClient(this, null)
 
+    bar.isSelected = true
     list.layoutManager = LinearLayoutManager(this)
     list.adapter = mainAdapter
 
-    viewModel.data.observe(this, Observer {
-      if (it != null) {
-        onModelEvent(it)
-      }
-    })
-  }
-
-  override fun onResume() {
-    super.onResume()
     ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION).let {
       if (it != PERMISSION_GRANTED) {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION), RC_LOCATION)
       } else {
+        injectSelf()
+        viewModel.data.observe(this, Observer {
+          if (it != null) {
+            onModelEvent(it)
+          }
+        })
         viewModel.uiEvents.onNext(LoadMain())
       }
     }
@@ -70,7 +67,7 @@ class MainActivity : AppCompatActivity() {
     when (requestCode) {
       RC_LOCATION -> {
         if ((grantResults.isNotEmpty() && grantResults[0] == PERMISSION_GRANTED)) {
-          viewModel.uiEvents.onNext(LoadMain())
+          recreate()
         } else {
           Snackbar
               .make(list, getString(R.string.error_location_permission), Toast.LENGTH_LONG)

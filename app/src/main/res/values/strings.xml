@@ -1,4 +1,7 @@
 <resources>
   <string name="app_name">City Guide</string>
   <string name="error_location_permission">Location permission is required</string>
+  <string name="bar">Bar</string>
+  <string name="bistro">Bistro</string>
+  <string name="cafe">Café</string>
 </resources>

@@ -4,7 +4,6 @@ import android.arch.lifecycle.MutableLiveData
 import android.arch.lifecycle.ViewModel
 import com.chahinem.cityguide.ui.MainEvent.LoadMain
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 import timber.log.Timber
@@ -24,10 +23,9 @@ class MainViewModel @Inject constructor(
           Observable.mergeDelayError(listOf(
               shared
                   .ofType(LoadMain::class.java)
-                  .compose(interactor.calendar())
+                  .compose(interactor.places())
           ))
         }
-        .observeOn(AndroidSchedulers.mainThread())
         .subscribe(data::postValue, Timber::e)
   }
 }

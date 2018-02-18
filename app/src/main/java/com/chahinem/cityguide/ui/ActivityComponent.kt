@@ -18,6 +18,7 @@ interface ActivityComponent {
 
   fun distanceMatrixApi(): DistanceMatrixApi
   fun lastLocationRepo(): LastLocationRepo
+  fun viewModel(): MainViewModel
 
   @Component.Builder interface Builder {
     fun apiModule(module: ApiModule): Builder

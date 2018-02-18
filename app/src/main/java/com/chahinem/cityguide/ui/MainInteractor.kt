@@ -25,7 +25,7 @@ class MainInteractor @Inject constructor(
     private val distanceMatrixApi: DistanceMatrixApi,
     private val lastLocationRepo: LastLocationRepo) {
 
-  fun calendar(): ObservableTransformer<in LoadMain, out MainModel> {
+  fun places(): ObservableTransformer<in LoadMain, out MainModel> {
     return ObservableTransformer {
       lastLocationRepo
           .lastLocation()
