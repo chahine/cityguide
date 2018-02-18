@@ -16,17 +16,21 @@ import com.chahinem.cityguide.ui.MainEvent.LoadMain
 import com.chahinem.cityguide.ui.MainModel.MainFailure
 import com.chahinem.cityguide.ui.MainModel.MainProgress
 import com.chahinem.cityguide.ui.MainModel.MainSuccess
+import com.chahinem.cityguide.ui.custom.CustomSlider.PositionChangeListener
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.places.GeoDataClient
 import com.google.android.gms.location.places.Places
 import kotlinx.android.synthetic.main.activity_main.bar
+import kotlinx.android.synthetic.main.activity_main.bistro
+import kotlinx.android.synthetic.main.activity_main.cafe
 import kotlinx.android.synthetic.main.activity_main.list
 import kotlinx.android.synthetic.main.activity_main.progressBar
+import kotlinx.android.synthetic.main.activity_main.slider
 import timber.log.Timber
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), PositionChangeListener {
 
   @Inject lateinit var viewModel: MainViewModel
 
@@ -43,6 +47,7 @@ class MainActivity : AppCompatActivity() {
     geoDataClient = Places.getGeoDataClient(this, null)
 
     bar.isSelected = true
+    slider.positionChangeListener = this
     list.layoutManager = LinearLayoutManager(this)
     list.adapter = mainAdapter
 
@@ -74,6 +79,29 @@ class MainActivity : AppCompatActivity() {
               .show()
         }
         return
+      }
+    }
+  }
+
+  override fun onPositionChanged(position: Int) {
+    bar.isSelected = false
+    bistro.isSelected = false
+    cafe.isSelected = false
+    when (position) {
+      0 -> {
+        bar.isSelected = true
+        mainAdapter.type = PlaceTypeEnum.BAR
+        mainAdapter.notifyDataSetChanged()
+      }
+      1 -> {
+        bistro.isSelected = true
+        mainAdapter.type = PlaceTypeEnum.BISTRO
+        mainAdapter.notifyDataSetChanged()
+      }
+      2 -> {
+        cafe.isSelected = true
+        mainAdapter.type = PlaceTypeEnum.CAFE
+        mainAdapter.notifyDataSetChanged()
       }
     }
   }

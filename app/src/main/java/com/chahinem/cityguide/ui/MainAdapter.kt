@@ -9,9 +9,14 @@ import android.widget.RatingBar
 import android.widget.TextView
 import com.chahinem.cityguide.R
 import com.chahinem.cityguide.ui.MainAdapter.MainViewHolder
+import com.chahinem.cityguide.ui.PlaceTypeEnum.BAR
+import com.chahinem.cityguide.ui.PlaceTypeEnum.BISTRO
+import com.chahinem.cityguide.ui.PlaceTypeEnum.CAFE
 import com.google.android.gms.location.places.Place
 
 class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
+
+  var type: PlaceTypeEnum = BAR
 
   private val items = mutableListOf<Item>()
 
@@ -25,7 +30,7 @@ class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
   override fun onBindViewHolder(holder: MainViewHolder?, position: Int) {
     holder?.let {
       if (it.adapterPosition != RecyclerView.NO_POSITION) {
-        it.bind(items[holder.adapterPosition])
+        it.bind(items.filter { it.type == type }[holder.adapterPosition])
       }
     }
   }
@@ -36,7 +41,7 @@ class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
     notifyDataSetChanged()
   }
 
-  override fun getItemCount() = items.size
+  override fun getItemCount() = items.filter { it.type == type }.size
 
   inner class MainViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -52,12 +57,12 @@ class MainAdapter : RecyclerView.Adapter<MainViewHolder>() {
       }
       distance.text = item.distanceText
       when (item.type) {
-        "bar" -> image.setImageResource(R.drawable.ic_local_bar)
-        "bistro" -> image.setImageResource(R.drawable.ic_restaurant)
-        "cafe" -> image.setImageResource(R.drawable.ic_local_cafe)
+        BAR -> image.setImageResource(R.drawable.ic_local_bar)
+        BISTRO -> image.setImageResource(R.drawable.ic_restaurant)
+        CAFE -> image.setImageResource(R.drawable.ic_local_cafe)
       }
     }
   }
 
-  class Item(val type: String, val place: Place, val distanceText: String?)
+  class Item(val type: PlaceTypeEnum, val place: Place, val distanceText: String?)
 }

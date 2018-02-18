@@ -11,6 +11,9 @@ import com.chahinem.cityguide.ui.MainEvent.LoadMain
 import com.chahinem.cityguide.ui.MainModel.MainFailure
 import com.chahinem.cityguide.ui.MainModel.MainProgress
 import com.chahinem.cityguide.ui.MainModel.MainSuccess
+import com.chahinem.cityguide.ui.PlaceTypeEnum.BAR
+import com.chahinem.cityguide.ui.PlaceTypeEnum.BISTRO
+import com.chahinem.cityguide.ui.PlaceTypeEnum.CAFE
 import com.chahinem.cityguide.utils.AutocompletePredictionsObservable
 import com.google.android.gms.location.places.Place
 import io.reactivex.Observable
@@ -31,9 +34,9 @@ class MainInteractor @Inject constructor(
           .lastLocation()
           .publish { shared ->
             Observable.mergeDelayError(
-                shared.compose(placeComposer("bar")),
-                shared.compose(placeComposer("bistro")),
-                shared.compose(placeComposer("cafe"))
+                shared.compose(placeComposer(BAR)),
+                shared.compose(placeComposer(BISTRO)),
+                shared.compose(placeComposer(CAFE))
             )
           }
           .toList()
@@ -56,10 +59,10 @@ class MainInteractor @Inject constructor(
     }
   }
 
-  private fun placeComposer(query: String): ObservableTransformer<in Location, out Pair<String, Place>> {
+  private fun placeComposer(query: PlaceTypeEnum): ObservableTransformer<in Location, out Pair<PlaceTypeEnum, Place>> {
     return ObservableTransformer {
       it.switchMap { location ->
-        AutocompletePredictionsObservable(activity, query, location)
+        AutocompletePredictionsObservable(activity, query.toString(), location)
             .flatMap { placeRepo.placeById(it.placeId.orEmpty()) }
             .map { query to it }
       }

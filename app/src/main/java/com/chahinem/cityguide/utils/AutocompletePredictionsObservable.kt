@@ -9,6 +9,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.LatLngBounds
 import io.reactivex.Observable
 import io.reactivex.Observer
+import io.reactivex.android.MainThreadDisposable
 
 class AutocompletePredictionsObservable(
     activity: Activity,
@@ -19,29 +20,41 @@ class AutocompletePredictionsObservable(
   private val geoDataClient = Places.getGeoDataClient(activity, null)
 
   override fun subscribeActual(observer: Observer<in AutocompletePrediction>?) {
-    geoDataClient
-        .getAutocompletePredictions(
-            query,
-            LatLngBounds.builder()
-                .include(LatLng(location.latitude + range, location.longitude + range))
-                .include(LatLng(location.latitude + range, location.longitude - range))
-                .include(LatLng(location.latitude - range, location.longitude + range))
-                .include(LatLng(location.latitude - range, location.longitude - range))
-                .build(),
-            AutocompleteFilter.Builder()
-                .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
-                .build()
-        )
-        .addOnSuccessListener {
-          it.forEach {
-            observer?.onNext(it)
+    observer?.onSubscribe(Listener(observer))
+  }
+
+  inner class Listener(private val observer: Observer<in AutocompletePrediction>?) : MainThreadDisposable() {
+    init {
+      geoDataClient
+          .getAutocompletePredictions(
+              query,
+              LatLngBounds.builder()
+                  .include(LatLng(location.latitude + range, location.longitude + range))
+                  .include(LatLng(location.latitude + range, location.longitude - range))
+                  .include(LatLng(location.latitude - range, location.longitude + range))
+                  .include(LatLng(location.latitude - range, location.longitude - range))
+                  .build(),
+              AutocompleteFilter.Builder()
+                  .setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT)
+                  .build()
+          )
+          .addOnSuccessListener {
+            it.forEach {
+              if (!isDisposed) {
+                observer?.onNext(it)
+              }
+            }
           }
-        }
-        .addOnFailureListener {
-          observer?.onError(it)
-        }
-        .addOnCompleteListener {
-          observer?.onComplete()
-        }
+          .addOnFailureListener {
+            if (!isDisposed) {
+              observer?.onError(it)
+            }
+          }
+          .addOnCompleteListener {
+            observer?.onComplete()
+          }
+    }
+
+    override fun onDispose() {}
   }
 }

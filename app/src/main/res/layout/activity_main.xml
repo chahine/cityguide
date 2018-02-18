@@ -9,8 +9,8 @@
     tools:context=".ui.MainActivity"
     >
 
-  <!--<include layout="@layout/custom_slider"/>-->
   <com.chahinem.cityguide.ui.custom.CustomSlider
+      android:id="@+id/slider"
       android:layout_width="match_parent"
       android:layout_height="64dp"
       android:background="@color/colorPrimary"
