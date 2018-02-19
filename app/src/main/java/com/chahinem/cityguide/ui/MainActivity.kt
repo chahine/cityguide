@@ -53,9 +53,7 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
     list.layoutManager = LinearLayoutManager(this)
     list.adapter = mainAdapter
 
-    refreshLayout.setOnRefreshListener {
-      viewModel.uiEvents.onNext(LoadMain(true))
-    }
+    refreshLayout.setOnRefreshListener { viewModel.uiEvents.onNext(LoadMain(true)) }
     viewModel.data.observe(this, Observer {
       if (it != null) {
         onModelEvent(it)
@@ -65,6 +63,8 @@ class MainActivity : AppCompatActivity(), PositionChangeListener {
     ContextCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION).let {
       if (it != PERMISSION_GRANTED) {
         ActivityCompat.requestPermissions(this, arrayOf(ACCESS_COARSE_LOCATION), RC_LOCATION)
+      } else {
+        viewModel.uiEvents.onNext(LoadMain())
       }
     }
   }

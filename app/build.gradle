@@ -4,13 +4,13 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 
 android {
-  compileSdkVersion 27
+  compileSdkVersion Versions.compileSdkVersion
 
   defaultConfig {
     applicationId "com.chahinem.cityguide"
 
-    minSdkVersion 21
-    targetSdkVersion 27
+    minSdkVersion Versions.minSdkVersion
+    targetSdkVersion Versions.targetSdkVersion
 
     versionCode 1
     versionName "1.0"
@@ -40,6 +40,7 @@ android {
       signingConfig signingConfigs.debug
     }
     release {
+      multiDexEnabled true
       minifyEnabled false
       proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
       signingConfig signingConfigs.debug
@@ -54,6 +55,9 @@ dependencies {
   implementation Deps.recyclerviewV7
   implementation Deps.constraintLayout
 
+  implementation 'com.google.android.gms:play-services-places:11.8.0'
+  implementation 'com.google.android.gms:play-services-location:11.8.0'
+
   Deps.arch.each { implementation it }
   Deps.archAP.each { kapt it }
 
@@ -64,10 +68,8 @@ dependencies {
   kapt Deps.daggerCompiler
 
   implementation Deps.timber
-  implementation 'com.google.android.gms:play-services-places:11.8.0'
-  implementation 'com.google.android.gms:play-services-location:11.8.0'
 
-  testImplementation Deps.jUnit
+  Deps.testLibs.each { testImplementation it }
 
   androidTestImplementation 'com.android.support.test:runner:1.0.2-alpha1'
   androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2-alpha1'

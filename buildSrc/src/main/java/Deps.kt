@@ -3,9 +3,9 @@ import Versions.daggerVersion
 import Versions.junitVersion
 import Versions.kotlinVersion
 import Versions.okhttpVersion
+import Versions.playVersion
 import Versions.retrofitVersion
 import Versions.rxandroidVersion
-import Versions.rxbindingVersion
 import Versions.rxjavaVersion
 import Versions.supportLibraryVersion
 
@@ -16,19 +16,16 @@ object Deps {
   val appcompatV7 = "com.android.support:appcompat-v7:$supportLibraryVersion"
   val design = "com.android.support:design:$supportLibraryVersion"
   val recyclerviewV7 = "com.android.support:recyclerview-v7:$supportLibraryVersion"
-  val supportAnnotations = "com.android.support:support-annotations:$supportLibraryVersion"
-  val supportV4 = "com.android.support:support-v4:$supportLibraryVersion"
-  val cardView = "com.android.support:cardview-v7:$supportLibraryVersion"
-  val customtabs = "com.android.support:customtabs:$supportLibraryVersion"
   val constraintLayout = "com.android.support.constraint:constraint-layout:1.1.0-beta5"
-  val multidex = "com.android.support:multidex:1.0.2"
+
+  // Play Services
+  val playServicesPlaces = "com.google.android.gms:play-services-places:$playVersion"
+  val playServicesLocation = "com.google.android.gms:play-services-location:$playVersion"
 
   // Architecture Components
   val archCompiler = "android.arch.lifecycle:compiler:$archVersion"
   val archEx = "android.arch.lifecycle:extensions:$archVersion"
   val archJava = "android.arch.lifecycle:common-java8:$archVersion"
-  val archRuntime = "android.arch.lifecycle:runtime:$archVersion"
-  val archViewModel = "android.arch.lifecycle:viewmodel:$archVersion"
 
   // Api
   val retrofit = "com.squareup.retrofit2:retrofit:$retrofitVersion"
@@ -43,25 +40,13 @@ object Deps {
   val kotlinStdlib = "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion"
 
   // Dagger
-  val annotationsApi = "javax.annotation:javax.annotation-api:1.2"
   val dagger = "com.google.dagger:dagger:$daggerVersion"
   val daggerCompiler = "com.google.dagger:dagger-compiler:$daggerVersion"
 
-  // Rx Bindings
-  const val rxbindingGroupId = "com.jakewharton.rxbinding2"
-  val rxbinding = "$rxbindingGroupId:rxbinding-kotlin:$rxbindingVersion"
-  val rxbindingSupportV4 = "$rxbindingGroupId:rxbinding-support-v4-kotlin:$rxbindingVersion"
-  val rxbindingAppcompatV7 = "$rxbindingGroupId:rxbinding-appcompat-v7-kotlin:$rxbindingVersion"
-  val rxbindingDesign = "$rxbindingGroupId:rxbinding-design-kotlin:$rxbindingVersion"
-  val rxbindingRecyclerview = "$rxbindingGroupId:rxbinding-recyclerview-v7:$rxbindingVersion"
-
   // Libraries
-  val picasso = "com.squareup.picasso:picasso:2.6.0-SNAPSHOT"
   val rxjava = "io.reactivex.rxjava2:rxjava:$rxjavaVersion"
   val rxandroid = "io.reactivex.rxjava2:rxandroid:$rxandroidVersion"
   val timber = "com.jakewharton.timber:timber:4.6.1"
-  val threetenabp = "com.jakewharton.threetenabp:threetenabp:1.0.5"
-  val inject = "javax.inject:javax.inject:1"
 
   // Testing
   val jUnit = "junit:junit:$junitVersion"
@@ -72,14 +57,6 @@ object Deps {
   // Dependency Group
   val rx = listOf(rxjava, rxandroid)
 
-  val rxBindings = listOf(
-      rxbinding,
-      rxbindingSupportV4,
-      rxbindingAppcompatV7,
-      rxbindingDesign,
-      rxbindingRecyclerview
-  )
-
   val api = listOf(
       retrofit,
       converterMoshi,
@@ -89,20 +66,15 @@ object Deps {
       okio,
       moshi)
 
-  val arch = listOf(archEx, archJava, archRuntime)
+  val arch = listOf(archEx, archJava)
 
   val archAP = listOf(archCompiler)
 
   val supportLibs = listOf(
       appcompatV7,
-      cardView,
       constraintLayout,
-      customtabs,
       design,
-      multidex,
-      recyclerviewV7,
-      supportAnnotations,
-      supportV4
+      recyclerviewV7
   )
 
   val testLibs = listOf(jUnit, mockito, hamcrest, robolectric)
